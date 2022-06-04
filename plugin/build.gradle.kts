@@ -1,8 +1,10 @@
 @file:Suppress("UnstableApiUsage")
 
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     `java-gradle-plugin`
-    id("org.jetbrains.kotlin.jvm") version "1.5.31"
+    id("org.jetbrains.kotlin.jvm") version "1.6.21"
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.10.0"
 }
 
@@ -62,4 +64,10 @@ tasks.named<Task>("check") {
 
 kotlin {
     explicitApi()
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 }
