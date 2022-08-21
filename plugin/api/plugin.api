@@ -1,18 +1,9 @@
-public abstract class GenerateSwigTask : org/gradle/api/DefaultTask {
-	public fun <init> (Lorg/gradle/process/ExecOperations;)V
-	public final fun generate ()V
-	public abstract fun getInterfaceFile ()Lorg/gradle/api/file/RegularFileProperty;
-	public abstract fun getOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
-	public abstract fun getPackageName ()Lorg/gradle/api/provider/Property;
-}
-
 public abstract class com/redissi/swig/plugin/GenerateCmakeConfigTask : org/gradle/api/DefaultTask {
 	public fun <init> ()V
 	public final fun generate ()V
-	public abstract fun getCppFile ()Ljava/io/File;
+	public abstract fun getCppFile ()Lorg/gradle/api/file/RegularFileProperty;
 	public abstract fun getLibName ()Lorg/gradle/api/provider/Property;
 	public abstract fun getOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
-	public abstract fun setCppFile (Ljava/io/File;)V
 }
 
 public abstract class com/redissi/swig/plugin/GenerateCmakePreloadScriptTask : org/gradle/api/DefaultTask {
@@ -30,6 +21,10 @@ public abstract class com/redissi/swig/plugin/GenerateJavaSwigWrapperTask : com/
 }
 
 public abstract class com/redissi/swig/plugin/GenerateSwigWrapperTask : org/gradle/api/tasks/SourceTask {
+	public static final field CPP_ARGUMENT Ljava/lang/String;
+	public static final field CPP_OUT_FILE_ARGUMENT Ljava/lang/String;
+	public static final field OUTPUT_DIR_ARGUMENT Ljava/lang/String;
+	public static final field SWIG_FILE_PROPERTY Ljava/lang/String;
 	public fun <init> ()V
 	protected final fun addArgs ([Ljava/lang/String;)V
 	public fun generate ()V
@@ -38,9 +33,8 @@ public abstract class com/redissi/swig/plugin/GenerateSwigWrapperTask : org/grad
 	public abstract fun getOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
 	public abstract fun getSourceDirs ()Lorg/gradle/api/provider/ListProperty;
 	protected final fun getSubFolders ()Ljava/lang/String;
-	public abstract fun getWrapFile ()Ljava/io/File;
+	public abstract fun getWrapFile ()Lorg/gradle/api/file/RegularFileProperty;
 	protected final fun setSubFolders (Ljava/lang/String;)V
-	public abstract fun setWrapFile (Ljava/io/File;)V
 }
 
 public final class com/redissi/swig/plugin/JavaLanguageWrapper : com/redissi/swig/plugin/TargetLanguageWrapper {
