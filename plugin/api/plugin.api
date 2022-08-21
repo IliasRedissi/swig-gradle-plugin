@@ -1,6 +1,76 @@
-public final class com/redissi/swig/plugin/SwigGradlePluginPlugin : org/gradle/api/Plugin {
+public abstract class GenerateSwigTask : org/gradle/api/DefaultTask {
+	public fun <init> (Lorg/gradle/process/ExecOperations;)V
+	public final fun generate ()V
+	public abstract fun getInterfaceFile ()Lorg/gradle/api/file/RegularFileProperty;
+	public abstract fun getOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
+	public abstract fun getPackageName ()Lorg/gradle/api/provider/Property;
+}
+
+public abstract class com/redissi/swig/plugin/GenerateCmakeConfigTask : org/gradle/api/DefaultTask {
+	public fun <init> ()V
+	public final fun generate ()V
+	public abstract fun getCppFile ()Ljava/io/File;
+	public abstract fun getLibName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
+	public abstract fun setCppFile (Ljava/io/File;)V
+}
+
+public abstract class com/redissi/swig/plugin/GenerateCmakePreloadScriptTask : org/gradle/api/DefaultTask {
+	public fun <init> ()V
+	public final fun generate ()V
+	public abstract fun getConfigDir ()Lorg/gradle/api/file/DirectoryProperty;
+	public abstract fun getFileName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
+}
+
+public abstract class com/redissi/swig/plugin/GenerateJavaSwigWrapperTask : com/redissi/swig/plugin/GenerateSwigWrapperTask {
+	public fun <init> ()V
+	public fun generate ()V
+	public abstract fun getPackageName ()Lorg/gradle/api/provider/Property;
+}
+
+public abstract class com/redissi/swig/plugin/GenerateSwigWrapperTask : org/gradle/api/tasks/SourceTask {
+	public fun <init> ()V
+	protected final fun addArgs ([Ljava/lang/String;)V
+	public fun generate ()V
+	public abstract fun getCppOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
+	public abstract fun getInterfaceFile ()Lorg/gradle/api/file/RegularFileProperty;
+	public abstract fun getOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
+	public abstract fun getSourceDirs ()Lorg/gradle/api/provider/ListProperty;
+	protected final fun getSubFolders ()Ljava/lang/String;
+	public abstract fun getWrapFile ()Ljava/io/File;
+	protected final fun setSubFolders (Ljava/lang/String;)V
+	public abstract fun setWrapFile (Ljava/io/File;)V
+}
+
+public final class com/redissi/swig/plugin/JavaLanguageWrapper : com/redissi/swig/plugin/TargetLanguageWrapper {
+	public fun <init> (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/io/File;Ljava/lang/String;Lorg/gradle/api/file/FileCollection;)V
+	public synthetic fun <init> (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/io/File;Ljava/lang/String;Lorg/gradle/api/file/FileCollection;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getPackageName ()Ljava/lang/String;
+	public final fun setPackageName (Ljava/lang/String;)V
+}
+
+public class com/redissi/swig/plugin/SwigExtension {
+	public fun <init> (Lorg/gradle/api/model/ObjectFactory;)V
+	public final fun java (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class com/redissi/swig/plugin/SwigPlugin : org/gradle/api/Plugin {
+	public static final field Companion Lcom/redissi/swig/plugin/SwigPlugin$Companion;
 	public fun <init> ()V
 	public synthetic fun apply (Ljava/lang/Object;)V
 	public fun apply (Lorg/gradle/api/Project;)V
+}
+
+public final class com/redissi/swig/plugin/SwigPlugin$Companion {
+}
+
+public abstract class com/redissi/swig/plugin/TargetLanguageWrapper {
+	public fun <init> (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/lang/String;Lorg/gradle/api/file/FileCollection;Ljava/io/File;)V
+	public synthetic fun <init> (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/lang/String;Lorg/gradle/api/file/FileCollection;Ljava/io/File;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getInterfaceFile ()Ljava/io/File;
+	public final fun getSourceFolders ()Lorg/gradle/api/file/FileCollection;
+	public final fun setInterfaceFile (Ljava/io/File;)V
+	public final fun setSourceFolders (Lorg/gradle/api/file/FileCollection;)V
 }
 

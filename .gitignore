@@ -5,3 +5,6 @@
 .gradle/
 build/
 local.properties
+
+#Android
+.cxx
