@@ -5,8 +5,17 @@ import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.tasks.*
 import java.io.File
+import java.util.*
 
 public abstract class GenerateSwigWrapperTask : SourceTask() {
+
+    internal companion object {
+        const val SWIG_FILE_PROPERTY = "swig.file"
+
+        const val CPP_ARGUMENT = "-c++"
+        const val OUTPUT_DIR_ARGUMENT = "-outdir"
+        const val CPP_OUT_FILE_ARGUMENT = "-o"
+    }
 
     @get:InputFile
     public abstract val interfaceFile: RegularFileProperty
@@ -48,13 +57,26 @@ public abstract class GenerateSwigWrapperTask : SourceTask() {
         outDir.mkdirs()
         cppOutputDir.mkdirs()
 
-        customArgs += listOf("-c++", "-outdir", outDir.absolutePath, "-o", wrapFile.absolutePath)
+        customArgs += listOf(
+            CPP_ARGUMENT,
+            OUTPUT_DIR_ARGUMENT, outDir.absolutePath,
+            CPP_OUT_FILE_ARGUMENT, wrapFile.absolutePath
+        )
 
         for (sourceDir in sourceDirs) {
             customArgs += "-I${sourceDir.absolutePath}"
         }
 
-        val command = mutableListOf("swig")
+        val properties = Properties()
+        properties.load(project.rootProject.file("local.properties").inputStream())
+
+        val swigCommand = if (properties.containsKey(SWIG_FILE_PROPERTY)) {
+            properties[SWIG_FILE_PROPERTY] as String
+        } else {
+            "swig"
+        }
+
+        val command = mutableListOf(swigCommand)
 
         command.addAll(customArgs)
         command.add(interfaceFile.absolutePath)
