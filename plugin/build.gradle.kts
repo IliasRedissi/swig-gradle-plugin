@@ -8,10 +8,11 @@ plugins {
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.10.0"
     `maven-publish`
     id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
+    signing
 }
 
 group = "com.redissi.plugin"
-version = "0.1.0-SNAPSHOT"
+version = "0.1.0"
 
 repositories {
     google()
@@ -26,11 +27,11 @@ dependencies {
 }
 
 gradlePlugin {
-    // Define the plugin
-    @Suppress("UNUSED_VARIABLE")
-    val swigPlugin by plugins.creating {
-        id = "com.redissi.swig.plugin"
-        implementationClass = "com.redissi.swig.plugin.SwigPlugin"
+    plugins {
+        create("swigPlugin") {
+            id = "com.redissi.swig.plugin"
+            implementationClass = "com.redissi.swig.plugin.SwigPlugin"
+        }
     }
 }
 
@@ -46,12 +47,74 @@ tasks.withType<KotlinCompile>().configureEach {
     }
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+signing {
+    sign(publishing.publications)
+}
+
 publishing {
     publications {
-        create<MavenPublication>("maven") {
+        afterEvaluate {
+            named<MavenPublication>("swigPluginPluginMarkerMaven") {
+                pom {
+                    name.set("SWIG Gradle Plugin")
+                    description.set("Gradle plugin to integrate SWIG generated sources in an Android project")
+                    url.set("https://github.com/IliasRedissi/swig-gradle-plugin")
+                    licenses {
+                        license {
+                            name.set("MIT License")
+                            url.set("https://spdx.org/licenses/MIT.txt")
+                            distribution.set("repo")
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set("iliasredissi")
+                            name.set("Ilias Redissi")
+                            url.set("https://github.com/IliasRedissi")
+                        }
+                    }
+                    scm {
+                        connection.set("scm:git:git://github.com/IliasRedissi/swig-gradle-plugin.git")
+                        developerConnection.set("scm:git:ssh://git@github.com:IliasRedissi/swig-gradle-plugin.git")
+                        url.set("https://github.com/IliasRedissi/swig-gradle-plugin")
+                    }
+                }
+            }
+        }
+        create<MavenPublication>("plugin") {
             artifactId = "swig-plugin"
 
             from(components["java"])
+
+            pom {
+                name.set("SWIG Gradle Plugin")
+                description.set("Gradle plugin to integrate SWIG generated sources in an Android project")
+                url.set("https://github.com/IliasRedissi/swig-gradle-plugin")
+                licenses {
+                    license {
+                        name.set("MIT License")
+                        url.set("https://spdx.org/licenses/MIT.txt")
+                        distribution.set("repo")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("iliasredissi")
+                        name.set("Ilias Redissi")
+                        url.set("https://github.com/IliasRedissi")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:git://github.com/IliasRedissi/swig-gradle-plugin.git")
+                    developerConnection.set("scm:git:ssh://git@github.com:IliasRedissi/swig-gradle-plugin.git")
+                    url.set("https://github.com/IliasRedissi/swig-gradle-plugin")
+                }
+            }
         }
     }
 }
