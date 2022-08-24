@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "com.redissi.plugin"
-version = "0.2.0-SNAPSHOT"
+version = "0.2.0"
 
 repositories {
     google()
