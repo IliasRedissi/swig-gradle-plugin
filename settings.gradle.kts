@@ -15,7 +15,7 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "swig-gradle-plugin"
-includeBuild("plugin")
+includeBuild("swig-plugin")
 
 include(":sample:app")
 include(":sample:lib")

@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "com.redissi.plugin"
-version = "0.1.0"
+version = "0.2.0-SNAPSHOT"
 
 repositories {
     google()
@@ -85,34 +85,30 @@ publishing {
                     }
                 }
             }
-        }
-        create<MavenPublication>("plugin") {
-            artifactId = "swig-plugin"
-
-            from(components["java"])
-
-            pom {
-                name.set("SWIG Gradle Plugin")
-                description.set("Gradle plugin to integrate SWIG generated sources in an Android project")
-                url.set("https://github.com/IliasRedissi/swig-gradle-plugin")
-                licenses {
-                    license {
-                        name.set("MIT License")
-                        url.set("https://spdx.org/licenses/MIT.txt")
-                        distribution.set("repo")
-                    }
-                }
-                developers {
-                    developer {
-                        id.set("iliasredissi")
-                        name.set("Ilias Redissi")
-                        url.set("https://github.com/IliasRedissi")
-                    }
-                }
-                scm {
-                    connection.set("scm:git:git://github.com/IliasRedissi/swig-gradle-plugin.git")
-                    developerConnection.set("scm:git:ssh://git@github.com:IliasRedissi/swig-gradle-plugin.git")
+            named<MavenPublication>("pluginMaven") {
+                pom {
+                    name.set("SWIG Gradle Plugin")
+                    description.set("Gradle plugin to integrate SWIG generated sources in an Android project")
                     url.set("https://github.com/IliasRedissi/swig-gradle-plugin")
+                    licenses {
+                        license {
+                            name.set("MIT License")
+                            url.set("https://spdx.org/licenses/MIT.txt")
+                            distribution.set("repo")
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set("iliasredissi")
+                            name.set("Ilias Redissi")
+                            url.set("https://github.com/IliasRedissi")
+                        }
+                    }
+                    scm {
+                        connection.set("scm:git:git://github.com/IliasRedissi/swig-gradle-plugin.git")
+                        developerConnection.set("scm:git:ssh://git@github.com:IliasRedissi/swig-gradle-plugin.git")
+                        url.set("https://github.com/IliasRedissi/swig-gradle-plugin")
+                    }
                 }
             }
         }
