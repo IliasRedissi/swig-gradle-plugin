@@ -3,6 +3,7 @@ package com.redissi.swig.sample
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.redissi.sample.Company
+import com.redissi.sample.Employee
 import com.redissi.swig.sample.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -21,7 +22,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val google = Company("Google")
+        val lockheimer = Employee("Hiroshi Lockheimer", google)
 
-        binding.companyName.text = google.name
+        binding.companyName.text = lockheimer.company.name
     }
 }

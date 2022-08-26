@@ -5,19 +5,17 @@ import com.android.build.api.variant.Variant
 import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.android.build.gradle.tasks.ExternalNativeBuildTask
 import org.gradle.api.Project
-import org.gradle.api.file.FileCollection
 import org.gradle.kotlin.dsl.withType
 import java.io.File
 import java.util.*
 
-public class JavaLanguageWrapper(
+public open class JavaLanguageWrapper(
     project: Project,
-    name: String,
-    interfaceFile: File? = null,
+    name: String
+) : TargetLanguageWrapper(project, "java", name) {
+
     @Suppress("MemberVisibilityCanBePrivate")
-    public var packageName: String? = null,
-    sourceFolders: FileCollection? = null,
-) : TargetLanguageWrapper(project, "java", name, sourceFolders, interfaceFile) {
+    public var packageName: String? = null
 
     override fun configureTask(androidExtension: CommonExtension<*, *, *, *>, variant: Variant) {
         val interfaceFile = this.interfaceFile

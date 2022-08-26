@@ -19,3 +19,4 @@ includeBuild("swig-plugin")
 
 include(":sample:app")
 include(":sample:lib")
+include(":sample:lib-groovy")

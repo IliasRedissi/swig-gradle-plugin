@@ -29,7 +29,7 @@ public class SwigPlugin: Plugin<Project> {
         val androidComponents = project.extensions.getByType(AndroidComponentsExtension::class.java)
 
         androidComponents.onVariants { variant: Variant ->
-            extension.targetLanguages.forEach { it.configureTask(android, variant) }
+            extension.javaWrapper.forEach { it.configureTask(android, variant) }
         }
     }
 }
