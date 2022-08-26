@@ -46,7 +46,7 @@ public final class com/redissi/swig/plugin/JavaLanguageWrapper : com/redissi/swi
 
 public class com/redissi/swig/plugin/SwigExtension {
 	public fun <init> (Lorg/gradle/api/model/ObjectFactory;)V
-	public final fun java (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public final fun getJavaWrapper ()Lorg/gradle/api/NamedDomainObjectContainer;
 }
 
 public final class com/redissi/swig/plugin/SwigPlugin : org/gradle/api/Plugin {
