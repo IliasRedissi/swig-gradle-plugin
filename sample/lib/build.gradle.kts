@@ -38,9 +38,11 @@ android {
 }
 
 swig {
-    java("SampleWrapper") {
-        packageName = "com.redissi.sample"
-        interfaceFile = file("src/main/swig/Sample.i")
-        sourceFolders = files("src/main/cpp")
+    javaWrapper {
+        create("SampleWrapper") {
+            packageName = "com.redissi.sample"
+            interfaceFile = file("src/main/swig/Sample.i")
+            sourceFolders = files("src/main/cpp")
+        }
     }
 }

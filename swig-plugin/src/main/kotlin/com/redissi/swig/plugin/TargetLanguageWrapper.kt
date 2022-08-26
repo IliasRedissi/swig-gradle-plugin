@@ -9,9 +9,12 @@ import java.io.File
 public abstract class TargetLanguageWrapper(
     internal val project: Project,
     internal val targetLanguage: String,
-    internal val name: String,
-    public var sourceFolders: FileCollection? = null,
-    public var interfaceFile: File? = null
+    public val name: String
 ) {
+
+    public var interfaceFile: File? = null
+
+    public var sourceFolders: FileCollection? = null
+
     internal abstract fun configureTask(androidExtension: CommonExtension<*, *, *, *>, variant: Variant)
 }
