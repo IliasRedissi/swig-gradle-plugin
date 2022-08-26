@@ -29,7 +29,7 @@ public abstract class GenerateCmakeConfigTask : DefaultTask() {
 
         val content = """
             if(NOT TARGET ${libName})
-            add_library(${libName} SHARED ${cppFile.absolutePath})
+            add_library(${libName} SHARED "${cppFile.absolutePath.replace('\\', '/')}")
             endif()
         """.trimIndent()
 

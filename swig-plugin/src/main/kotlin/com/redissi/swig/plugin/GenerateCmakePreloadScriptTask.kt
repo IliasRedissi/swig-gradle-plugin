@@ -22,7 +22,7 @@ public abstract class GenerateCmakePreloadScriptTask : DefaultTask() {
     @TaskAction
     public fun generate() {
         val content = """
-            list(APPEND CMAKE_FIND_ROOT_PATH ${configDir.get().asFile.absolutePath})
+            list(APPEND CMAKE_FIND_ROOT_PATH "${configDir.get().asFile.absolutePath.replace('\\', '/')}")
             set(CMAKE_FIND_ROOT_PATH ${'$'}{CMAKE_FIND_ROOT_PATH} CACHE PATH "" FORCE)
         """.trimIndent()
 
