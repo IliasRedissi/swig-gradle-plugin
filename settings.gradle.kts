@@ -20,3 +20,5 @@ includeBuild("swig-plugin")
 include(":sample:app")
 include(":sample:lib")
 include(":sample:lib-groovy")
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

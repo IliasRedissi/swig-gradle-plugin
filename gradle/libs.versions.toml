@@ -1,10 +1,16 @@
 [versions]
 androidGradlePlugin = "8.0.0"
+androidxAppCompat = "1.6.1"
+androidxConstraintlayout = "2.1.4"
 gradleNexusPublish = "1.1.0"
 kotlin = "1.8.10"
 kotlinxBinaryCompatibilityValidator = "0.13.1"
 
 [libraries]
+android-gradle = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
+android-gradle-api = { group = "com.android.tools.build", name = "gradle-api", version.ref = "androidGradlePlugin" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppCompat" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidxConstraintlayout" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

@@ -15,8 +15,8 @@ group = "com.redissi.plugin"
 version = "0.4.0-SNAPSHOT"
 
 dependencies {
-    compileOnly("com.android.tools.build:gradle:8.0.0")
-    compileOnly("com.android.tools.build:gradle-api:8.0.0")
+    compileOnly(libs.android.gradle)
+    compileOnly(libs.android.gradle.api)
 }
 
 gradlePlugin {
