@@ -4,8 +4,10 @@ public final class com/redissi/swig/plugin/SwigPlugin : org/gradle/api/Plugin {
 	public fun apply (Lorg/gradle/api/Project;)V
 }
 
-public abstract interface class com/redissi/swig/plugin/extension/JavaWrapper {
+public abstract class com/redissi/swig/plugin/extension/JavaWrapper {
+	public fun <init> (Ljava/lang/String;)V
 	public abstract fun getInterfaceFile ()Ljava/io/File;
+	public final fun getName ()Ljava/lang/String;
 	public abstract fun getPackageName ()Ljava/lang/String;
 	public abstract fun getSourceFolders ()Lorg/gradle/api/file/FileCollection;
 	public abstract fun setInterfaceFile (Ljava/io/File;)V
@@ -13,14 +15,14 @@ public abstract interface class com/redissi/swig/plugin/extension/JavaWrapper {
 	public abstract fun setSourceFolders (Lorg/gradle/api/file/FileCollection;)V
 }
 
-public abstract interface class com/redissi/swig/plugin/extension/SwigExtension {
-	public abstract fun getJavaWrapper ()Lorg/gradle/api/NamedDomainObjectSet;
+public abstract class com/redissi/swig/plugin/extension/SwigExtension {
+	public fun <init> (Lorg/gradle/api/model/ObjectFactory;)V
+	public final fun getJavaWrapper ()Lorg/gradle/api/NamedDomainObjectContainer;
 }
 
 public abstract class com/redissi/swig/plugin/task/GenerateSwigWrapperTask : org/gradle/api/tasks/SourceTask {
 	public fun <init> ()V
 	public fun generate ()V
-	public abstract fun getCppOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
 	public abstract fun getInterfaceFile ()Lorg/gradle/api/file/RegularFileProperty;
 	public abstract fun getOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
 	public abstract fun getPackageName ()Lorg/gradle/api/provider/Property;

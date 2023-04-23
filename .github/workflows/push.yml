@@ -16,6 +16,11 @@ jobs:
         with:
           java-version: 17
           distribution: 'temurin'
-      - uses: gradle/gradle-build-action@v2
+      - name: Build plugin
+        uses: gradle/gradle-build-action@v2
         with:
           arguments: :swig-plugin:build
+      - name: Build sample app
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: :sample:build
