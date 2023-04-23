@@ -1,9 +1,10 @@
 plugins {
-    id 'com.android.library' version '7.2.2'
+    alias(libs.plugins.android.library)
     id 'com.redissi.swig.plugin'
 }
 
 android {
+    namespace = "com.redissi.swig.sample.lib.groovy"
     compileSdk 33
 
     defaultConfig {
@@ -36,14 +37,14 @@ android {
             headers 'src/main/cpp/include'
         }
     }
-}
 
-swig {
-    javaWrapper {
-        SampleGroovyWrapper {
-            packageName = "com.redissi.sample"
-            interfaceFile = file("src/main/swig/SampleGroovy.i")
-            sourceFolders = files("src/main/cpp", project(':sample:lib').file("src/main/cpp"))
+    swig {
+        javaWrapper {
+            SampleGroovyWrapper {
+                packageName = "com.redissi.sample"
+                interfaceFile = file("src/main/swig/SampleGroovy.i")
+                sourceFolders = files("src/main/cpp", project(':sample:lib').file("src/main/cpp"))
+            }
         }
     }
 }

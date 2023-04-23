@@ -1,21 +1,32 @@
-package com.redissi.swig.plugin
+package com.redissi.swig.plugin.task
 
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.ListProperty
-import org.gradle.api.tasks.*
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.SourceTask
+import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.TaskExecutionException
 import java.io.File
-import java.util.*
 
 public abstract class GenerateSwigWrapperTask : SourceTask() {
 
-    internal companion object {
-        const val SWIG_FILE_PROPERTY = "swig.file"
+    private companion object {
+        private const val SWIG_FILE_PROPERTY = "swig.file"
 
-        const val CPP_ARGUMENT = "-c++"
-        const val OUTPUT_DIR_ARGUMENT = "-outdir"
-        const val CPP_OUT_FILE_ARGUMENT = "-o"
+        private const val CPP_ARGUMENT = "-c++"
+        private const val OUTPUT_DIR_ARGUMENT = "-outdir"
+        private const val CPP_OUT_FILE_ARGUMENT = "-o"
     }
+
+    @get:Input
+    public abstract val packageName: Property<String>
 
     @get:InputFile
     public abstract val interfaceFile: RegularFileProperty
@@ -26,36 +37,37 @@ public abstract class GenerateSwigWrapperTask : SourceTask() {
     @get:OutputDirectory
     public abstract val outputDir: DirectoryProperty
 
-    @get:OutputDirectory
-    public abstract val cppOutputDir: DirectoryProperty
-
     @get:OutputFile
     public abstract val wrapFile: RegularFileProperty
 
-    @Internal
-    protected var subFolders: String = ""
+    private var subFolders: String = ""
 
     private val customArgs: MutableList<String> = mutableListOf()
 
-    protected fun addArgs(vararg args: String) {
+    private fun addArgs(vararg args: String) {
         this.customArgs += args
     }
 
     @TaskAction
     public open fun generate() {
+        val packageName = packageName.get()
+        subFolders = packageName.replace('.', '/')
+
+        addArgs("-java")
+        addArgs("-package", packageName)
+
         requireNotNull(interfaceFile.get())
 
         cleanUp()
 
         val outputDir = outputDir.get().asFile
         val wrapFile = wrapFile.get().asFile
-        val cppOutputDir = cppOutputDir.get().asFile
         val sourceDirs = sourceDirs.get()
         val interfaceFile = interfaceFile.get().asFile
 
         val outDir = File(outputDir, subFolders)
         outDir.mkdirs()
-        cppOutputDir.mkdirs()
+        wrapFile.parentFile.mkdirs()
 
         customArgs += listOf(
             CPP_ARGUMENT,
@@ -67,14 +79,7 @@ public abstract class GenerateSwigWrapperTask : SourceTask() {
             customArgs += "-I${sourceDir.absolutePath}"
         }
 
-        val properties = Properties()
-        properties.load(project.rootProject.file("local.properties").inputStream())
-
-        val swigCommand = if (properties.containsKey(SWIG_FILE_PROPERTY)) {
-            properties[SWIG_FILE_PROPERTY] as String
-        } else {
-            "swig"
-        }
+        val swigCommand = getSwigPath()
 
         val command = mutableListOf(swigCommand)
 
@@ -91,11 +96,26 @@ public abstract class GenerateSwigWrapperTask : SourceTask() {
         }
     }
 
+    private fun getSwigPath(): String {
+        val localProperties = gradleLocalProperties(project.rootDir)
+
+        if (localProperties.containsKey(SWIG_FILE_PROPERTY)) {
+            return localProperties[SWIG_FILE_PROPERTY] as String
+        }
+
+        val properties = project.properties
+
+        if (properties.containsKey(SWIG_FILE_PROPERTY)) {
+            return properties[SWIG_FILE_PROPERTY] as String
+        }
+
+        return "swig" // from PATH
+    }
+
     private fun cleanUp() {
         val output = outputDir.get().asFile
         output.deleteRecursively()
-        val cppOutput = cppOutputDir.get().asFile
-        cppOutput.deleteRecursively()
+        val wrapFile = wrapFile.get().asFile
+        wrapFile.deleteRecursively()
     }
-
 }

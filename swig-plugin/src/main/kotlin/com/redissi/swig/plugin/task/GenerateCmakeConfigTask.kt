@@ -1,4 +1,4 @@
-package com.redissi.swig.plugin
+package com.redissi.swig.plugin.task
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
@@ -10,28 +10,30 @@ import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
-public abstract class GenerateCmakeConfigTask : DefaultTask() {
+internal abstract class GenerateCmakeConfigTask : DefaultTask() {
 
     @get:Input
-    public abstract val libName: Property<String>
+    abstract val libName: Property<String>
 
     @get:InputFile
-    public abstract val cppFile: RegularFileProperty
+    abstract val cppFile: RegularFileProperty
 
     @get:OutputDirectory
-    public abstract val outputDir: DirectoryProperty
+    abstract val outputDir: DirectoryProperty
 
     @TaskAction
-    public fun generate() {
+    fun generate() {
         val libName = libName.get()
         val cppFile = cppFile.get().asFile
         val outputDir = outputDir.get().asFile
 
+        val cppPath = cppFile.absolutePath.replace('\\', '/')
+
         val content = """
-            if(NOT TARGET ${libName})
-            add_library(${libName} SHARED "${cppFile.absolutePath.replace('\\', '/')}")
-            endif()
-        """.trimIndent()
+            |if(NOT TARGET ${libName})
+            |    add_library(${libName} SHARED "$cppPath")
+            |endif()
+        """.trimMargin()
 
         val cmakeFile = File(outputDir, "${libName}Config.cmake")
         cmakeFile.parentFile.mkdirs()

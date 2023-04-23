@@ -12,6 +12,7 @@ class MainActivity : AppCompatActivity() {
         init {
             System.loadLibrary("sample")
             System.loadLibrary("SampleWrapper")
+            System.loadLibrary("SampleGroovyWrapper")
         }
     }
 
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
         val google = Company("Google")
         val lockheimer = Employee("Hiroshi Lockheimer", google)
 
+        binding.employeeName.text = lockheimer.name
         binding.companyName.text = lockheimer.company.name
     }
 }

@@ -7,15 +7,35 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/companyName"
-        android:layout_width="0dp"
+        android:id="@+id/employeeName"
+        android:layout_width="379dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="4dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/companyName"
+        app:layout_constraintEnd_toEndOf="@+id/companyName"
+        app:layout_constraintStart_toStartOf="@+id/companyName"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="TextView" />
+
+    <TextView
+        android:id="@+id/companyName"
+        android:layout_width="379dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/employeeName"
+        app:layout_constraintVertical_bias="0.5"
         tools:text="TextView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

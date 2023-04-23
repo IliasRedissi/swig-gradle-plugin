@@ -1,9 +1,10 @@
 plugins {
-    id("com.android.application") version "7.2.2"
-    id("org.jetbrains.kotlin.android") version "1.7.10"
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
+    namespace = "com.redissi.swig.sample"
     compileSdk = 33
 
     defaultConfig {
@@ -15,12 +16,16 @@ android {
         viewBinding = true
     }
 
-    packagingOptions {
+    packaging {
         jniLibs {
             pickFirsts += "lib/**/libc++_shared.so"
             pickFirsts += "lib/**/libsample.so"
         }
     }
+}
+
+kotlin {
+    jvmToolchain(8)
 }
 
 dependencies {

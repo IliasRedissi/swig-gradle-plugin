@@ -1,69 +1,30 @@
-public abstract class com/redissi/swig/plugin/GenerateCmakeConfigTask : org/gradle/api/DefaultTask {
-	public fun <init> ()V
-	public final fun generate ()V
-	public abstract fun getCppFile ()Lorg/gradle/api/file/RegularFileProperty;
-	public abstract fun getLibName ()Lorg/gradle/api/provider/Property;
-	public abstract fun getOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
-}
-
-public abstract class com/redissi/swig/plugin/GenerateCmakePreloadScriptTask : org/gradle/api/DefaultTask {
-	public fun <init> ()V
-	public final fun generate ()V
-	public abstract fun getConfigDir ()Lorg/gradle/api/file/DirectoryProperty;
-	public abstract fun getFileName ()Lorg/gradle/api/provider/Property;
-	public abstract fun getOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
-}
-
-public abstract class com/redissi/swig/plugin/GenerateJavaSwigWrapperTask : com/redissi/swig/plugin/GenerateSwigWrapperTask {
-	public fun <init> ()V
-	public fun generate ()V
-	public abstract fun getPackageName ()Lorg/gradle/api/provider/Property;
-}
-
-public abstract class com/redissi/swig/plugin/GenerateSwigWrapperTask : org/gradle/api/tasks/SourceTask {
-	public static final field CPP_ARGUMENT Ljava/lang/String;
-	public static final field CPP_OUT_FILE_ARGUMENT Ljava/lang/String;
-	public static final field OUTPUT_DIR_ARGUMENT Ljava/lang/String;
-	public static final field SWIG_FILE_PROPERTY Ljava/lang/String;
-	public fun <init> ()V
-	protected final fun addArgs ([Ljava/lang/String;)V
-	public fun generate ()V
-	public abstract fun getCppOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
-	public abstract fun getInterfaceFile ()Lorg/gradle/api/file/RegularFileProperty;
-	public abstract fun getOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
-	public abstract fun getSourceDirs ()Lorg/gradle/api/provider/ListProperty;
-	protected final fun getSubFolders ()Ljava/lang/String;
-	public abstract fun getWrapFile ()Lorg/gradle/api/file/RegularFileProperty;
-	protected final fun setSubFolders (Ljava/lang/String;)V
-}
-
-public class com/redissi/swig/plugin/JavaLanguageWrapper : com/redissi/swig/plugin/TargetLanguageWrapper {
-	public fun <init> (Lorg/gradle/api/Project;Ljava/lang/String;)V
-	public final fun getPackageName ()Ljava/lang/String;
-	public final fun setPackageName (Ljava/lang/String;)V
-}
-
-public class com/redissi/swig/plugin/SwigExtension {
-	public fun <init> (Lorg/gradle/api/model/ObjectFactory;)V
-	public final fun getJavaWrapper ()Lorg/gradle/api/NamedDomainObjectContainer;
-}
-
 public final class com/redissi/swig/plugin/SwigPlugin : org/gradle/api/Plugin {
-	public static final field Companion Lcom/redissi/swig/plugin/SwigPlugin$Companion;
 	public fun <init> ()V
 	public synthetic fun apply (Ljava/lang/Object;)V
 	public fun apply (Lorg/gradle/api/Project;)V
 }
 
-public final class com/redissi/swig/plugin/SwigPlugin$Companion {
+public abstract interface class com/redissi/swig/plugin/extension/JavaWrapper {
+	public abstract fun getInterfaceFile ()Ljava/io/File;
+	public abstract fun getPackageName ()Ljava/lang/String;
+	public abstract fun getSourceFolders ()Lorg/gradle/api/file/FileCollection;
+	public abstract fun setInterfaceFile (Ljava/io/File;)V
+	public abstract fun setPackageName (Ljava/lang/String;)V
+	public abstract fun setSourceFolders (Lorg/gradle/api/file/FileCollection;)V
 }
 
-public abstract class com/redissi/swig/plugin/TargetLanguageWrapper {
-	public fun <init> (Lorg/gradle/api/Project;Ljava/lang/String;Ljava/lang/String;)V
-	public final fun getInterfaceFile ()Ljava/io/File;
-	public final fun getName ()Ljava/lang/String;
-	public final fun getSourceFolders ()Lorg/gradle/api/file/FileCollection;
-	public final fun setInterfaceFile (Ljava/io/File;)V
-	public final fun setSourceFolders (Lorg/gradle/api/file/FileCollection;)V
+public abstract interface class com/redissi/swig/plugin/extension/SwigExtension {
+	public abstract fun getJavaWrapper ()Lorg/gradle/api/NamedDomainObjectSet;
+}
+
+public abstract class com/redissi/swig/plugin/task/GenerateSwigWrapperTask : org/gradle/api/tasks/SourceTask {
+	public fun <init> ()V
+	public fun generate ()V
+	public abstract fun getCppOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
+	public abstract fun getInterfaceFile ()Lorg/gradle/api/file/RegularFileProperty;
+	public abstract fun getOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
+	public abstract fun getPackageName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getSourceDirs ()Lorg/gradle/api/provider/ListProperty;
+	public abstract fun getWrapFile ()Lorg/gradle/api/file/RegularFileProperty;
 }
 

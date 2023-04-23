@@ -4,26 +4,19 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `kotlin-dsl`
-    id("org.jetbrains.kotlin.jvm") version "1.6.21"
-    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.10.0"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlinx.binary.compatibility.validator)
     `maven-publish`
-    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
+    alias(libs.plugins.gradle.nexus.publish)
     signing
 }
 
 group = "com.redissi.plugin"
 version = "0.4.0-SNAPSHOT"
 
-repositories {
-    google()
-    mavenCentral()
-}
-
 dependencies {
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    compileOnly("com.android.tools.build:gradle:7.2.2")
-    compileOnly("com.android.tools.build:gradle-api:7.2.2")
+    compileOnly("com.android.tools.build:gradle:8.0.0")
+    compileOnly("com.android.tools.build:gradle-api:8.0.0")
 }
 
 gradlePlugin {
@@ -36,14 +29,14 @@ gradlePlugin {
 }
 
 kotlin {
+    jvmToolchain(11)
     explicitApi()
 }
 
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = "1.8"
-        apiVersion = "1.6"
-        languageVersion = "1.6"
+        apiVersion = "1.8"
+        languageVersion = "1.8"
     }
 }
 
