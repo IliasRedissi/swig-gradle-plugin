@@ -16,7 +16,7 @@ android {
         viewBinding = true
     }
 
-    packaging {
+    packagingOptions {
         jniLibs {
             pickFirsts += "lib/**/libc++_shared.so"
             pickFirsts += "lib/**/libsample.so"
