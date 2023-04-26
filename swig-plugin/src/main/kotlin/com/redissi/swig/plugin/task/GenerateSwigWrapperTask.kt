@@ -5,6 +5,7 @@ import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
+import org.gradle.api.provider.ProviderFactory
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.InputFiles
@@ -14,6 +15,7 @@ import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.TaskExecutionException
 import java.io.File
+import javax.inject.Inject
 
 public abstract class GenerateSwigWrapperTask : SourceTask() {
 
@@ -24,6 +26,12 @@ public abstract class GenerateSwigWrapperTask : SourceTask() {
         private const val OUTPUT_DIR_ARGUMENT = "-outdir"
         private const val CPP_OUT_FILE_ARGUMENT = "-o"
     }
+
+    @get:Inject
+    public abstract val providerFactory: ProviderFactory
+
+    @get:Input
+    public abstract var rootPath: String
 
     @get:Input
     public abstract val packageName: Property<String>
@@ -97,16 +105,17 @@ public abstract class GenerateSwigWrapperTask : SourceTask() {
     }
 
     private fun getSwigPath(): String {
-        val localProperties = gradleLocalProperties(project.rootDir)
+        val localProperties = gradleLocalProperties(File(rootPath))
 
         if (localProperties.containsKey(SWIG_FILE_PROPERTY)) {
             return localProperties[SWIG_FILE_PROPERTY] as String
         }
 
-        val properties = project.properties
+        val property = providerFactory.gradleProperty(SWIG_FILE_PROPERTY)
 
-        if (properties.containsKey(SWIG_FILE_PROPERTY)) {
-            return properties[SWIG_FILE_PROPERTY] as String
+
+        if (property.isPresent) {
+            return property.get()
         }
 
         return "swig" // from PATH
