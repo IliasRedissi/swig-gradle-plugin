@@ -177,7 +177,7 @@ public class SwigPlugin : Plugin<Project> {
             this.sourceDirs.set(sourceFolders)
             this.wrapFile.set(wrapFile)
 
-            this.rootPath = project.rootDir.path
+            this.rootPath.set(project.rootDir.path)
 
             this.group = GROUP
         }

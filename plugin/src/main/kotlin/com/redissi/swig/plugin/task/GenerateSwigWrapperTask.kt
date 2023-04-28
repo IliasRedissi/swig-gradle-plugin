@@ -31,7 +31,7 @@ public abstract class GenerateSwigWrapperTask : SourceTask() {
     public abstract val providerFactory: ProviderFactory
 
     @get:Input
-    public abstract var rootPath: String
+    public abstract val rootPath: Property<String>
 
     @get:Input
     public abstract val packageName: Property<String>
@@ -105,7 +105,7 @@ public abstract class GenerateSwigWrapperTask : SourceTask() {
     }
 
     private fun getSwigPath(): String {
-        val localProperties = gradleLocalProperties(File(rootPath))
+        val localProperties = gradleLocalProperties(File(rootPath.get()))
 
         if (localProperties.containsKey(SWIG_FILE_PROPERTY)) {
             return localProperties[SWIG_FILE_PROPERTY] as String

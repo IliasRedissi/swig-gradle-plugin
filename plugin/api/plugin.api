@@ -26,6 +26,8 @@ public abstract class com/redissi/swig/plugin/task/GenerateSwigWrapperTask : org
 	public abstract fun getInterfaceFile ()Lorg/gradle/api/file/RegularFileProperty;
 	public abstract fun getOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
 	public abstract fun getPackageName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getProviderFactory ()Lorg/gradle/api/provider/ProviderFactory;
+	public abstract fun getRootPath ()Lorg/gradle/api/provider/Property;
 	public abstract fun getSourceDirs ()Lorg/gradle/api/provider/ListProperty;
 	public abstract fun getWrapFile ()Lorg/gradle/api/file/RegularFileProperty;
 }
