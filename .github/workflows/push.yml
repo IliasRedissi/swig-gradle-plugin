@@ -19,7 +19,7 @@ jobs:
       - name: Build plugin
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: :swig-plugin:build
+          arguments: :plugin:build
       - name: Build sample app
         uses: gradle/gradle-build-action@v2
         with:
