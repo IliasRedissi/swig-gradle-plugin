@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
-    id("com.redissi.swig.plugin")
+    id("com.redissi.swig")
 }
 
 android {
