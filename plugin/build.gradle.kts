@@ -11,7 +11,7 @@ plugins {
     signing
 }
 
-group = "com.redissi.plugin"
+group = "com.redissi.swig"
 version = "0.4.0-SNAPSHOT"
 
 dependencies {
@@ -22,7 +22,7 @@ dependencies {
 gradlePlugin {
     plugins {
         create("swigPlugin") {
-            id = "com.redissi.swig.plugin"
+            id = "com.redissi.swig"
             implementationClass = "com.redissi.swig.plugin.SwigPlugin"
         }
     }
