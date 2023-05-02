@@ -17,10 +17,10 @@ jobs:
           java-version: 17
           distribution: 'temurin'
       - name: Build plugin
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.4.2
         with:
           arguments: :plugin:build
       - name: Build sample app
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.4.2
         with:
           arguments: :sample:build

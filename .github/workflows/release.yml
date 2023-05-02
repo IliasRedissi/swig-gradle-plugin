@@ -16,11 +16,11 @@ jobs:
           java-version: 11
           distribution: 'temurin'
       - name: Build plugin
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.4.2
         with:
           arguments: :plugin:build
       - name: Publish plugin
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.4.2
         with:
           arguments: :plugin:publish
         env:
