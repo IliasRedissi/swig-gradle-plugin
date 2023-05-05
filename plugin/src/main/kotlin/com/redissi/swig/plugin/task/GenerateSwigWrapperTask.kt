@@ -42,6 +42,12 @@ public abstract class GenerateSwigWrapperTask : SourceTask() {
     @get:InputFiles
     public abstract val sourceDirs: ListProperty<File>
 
+    @get:Input
+    public abstract val symbols: ListProperty<String>
+
+    @get:Input
+    public abstract val extraArguments: ListProperty<String>
+
     @get:OutputDirectory
     public abstract val outputDir: DirectoryProperty
 
@@ -86,6 +92,12 @@ public abstract class GenerateSwigWrapperTask : SourceTask() {
         for (sourceDir in sourceDirs) {
             customArgs += "-I${sourceDir.absolutePath}"
         }
+
+        for (symbol in symbols.get()) {
+            customArgs += "-D${symbol}"
+        }
+
+        customArgs.addAll(extraArguments.get())
 
         val swigCommand = getSwigPath()
 

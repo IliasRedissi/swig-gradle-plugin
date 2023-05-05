@@ -12,7 +12,18 @@ android {
 
         externalNativeBuild {
             cmake {
-                arguments("-DANDROID_STL=c++_shared")
+                arguments("-DANDROID_STL=c++_shared", "-DCOMPANY_YEAR=TRUE")
+            }
+        }
+
+        swig {
+            javaWrapper {
+                create("SampleWrapper") {
+                    packageName = "com.redissi.sample"
+                    interfaceFile = file("src/main/swig/Sample.i")
+                    sourceFolders = files("src/main/cpp")
+                    extraArguments("-fvirtual", "-fcompact", "-D")
+                }
             }
         }
     }
@@ -33,16 +44,6 @@ android {
     prefab {
         create("sample") {
             headers = "src/main/cpp/include"
-        }
-    }
-
-    swig {
-        javaWrapper {
-            create("SampleWrapper") {
-                packageName = "com.redissi.sample"
-                interfaceFile = file("src/main/swig/Sample.i")
-                sourceFolders = files("src/main/cpp")
-            }
         }
     }
 }

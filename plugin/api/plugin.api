@@ -4,15 +4,17 @@ public final class com/redissi/swig/plugin/SwigPlugin : org/gradle/api/Plugin {
 	public fun apply (Lorg/gradle/api/Project;)V
 }
 
-public abstract class com/redissi/swig/plugin/extension/JavaWrapper {
+public class com/redissi/swig/plugin/extension/JavaWrapper {
 	public fun <init> (Ljava/lang/String;)V
-	public abstract fun getInterfaceFile ()Ljava/io/File;
+	public final fun extraArguments ([Ljava/lang/String;)V
+	public final fun getExtraArguments ()Ljava/util/List;
+	public final fun getInterfaceFile ()Ljava/io/File;
 	public final fun getName ()Ljava/lang/String;
-	public abstract fun getPackageName ()Ljava/lang/String;
-	public abstract fun getSourceFolders ()Lorg/gradle/api/file/FileCollection;
-	public abstract fun setInterfaceFile (Ljava/io/File;)V
-	public abstract fun setPackageName (Ljava/lang/String;)V
-	public abstract fun setSourceFolders (Lorg/gradle/api/file/FileCollection;)V
+	public final fun getPackageName ()Ljava/lang/String;
+	public final fun getSourceFolders ()Lorg/gradle/api/file/FileCollection;
+	public final fun setInterfaceFile (Ljava/io/File;)V
+	public final fun setPackageName (Ljava/lang/String;)V
+	public final fun setSourceFolders (Lorg/gradle/api/file/FileCollection;)V
 }
 
 public abstract class com/redissi/swig/plugin/extension/SwigExtension {
@@ -23,12 +25,14 @@ public abstract class com/redissi/swig/plugin/extension/SwigExtension {
 public abstract class com/redissi/swig/plugin/task/GenerateSwigWrapperTask : org/gradle/api/tasks/SourceTask {
 	public fun <init> ()V
 	public fun generate ()V
+	public abstract fun getExtraArguments ()Lorg/gradle/api/provider/ListProperty;
 	public abstract fun getInterfaceFile ()Lorg/gradle/api/file/RegularFileProperty;
 	public abstract fun getOutputDir ()Lorg/gradle/api/file/DirectoryProperty;
 	public abstract fun getPackageName ()Lorg/gradle/api/provider/Property;
 	public abstract fun getProviderFactory ()Lorg/gradle/api/provider/ProviderFactory;
 	public abstract fun getRootPath ()Lorg/gradle/api/provider/Property;
 	public abstract fun getSourceDirs ()Lorg/gradle/api/provider/ListProperty;
+	public abstract fun getSymbols ()Lorg/gradle/api/provider/ListProperty;
 	public abstract fun getWrapFile ()Lorg/gradle/api/file/RegularFileProperty;
 }
 

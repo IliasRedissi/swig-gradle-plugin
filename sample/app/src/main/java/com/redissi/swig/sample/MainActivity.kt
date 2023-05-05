@@ -22,10 +22,10 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val google = Company("Google")
+        val google = Company("Google", 1998)
         val lockheimer = Employee("Hiroshi Lockheimer", google)
 
         binding.employeeName.text = lockheimer.name
-        binding.companyName.text = lockheimer.company.name
+        binding.companyName.text = "${lockheimer.company.name} (${lockheimer.company.foundationYear})"
     }
 }

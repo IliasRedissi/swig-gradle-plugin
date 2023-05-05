@@ -71,10 +71,19 @@ public class SwigPlugin : Plugin<Project> {
         val cmakeConfigTask = createOrFindCmakeConfigTask(project, javaWrapper)
         val cmakePreloadTaskName = createOrFindCmakePreloadScriptTask(project, cmakeConfigTask)
 
+        val externalNativeArguments = variant.externalNativeBuild?.arguments
+
+        val symbols = externalNativeArguments
+                ?.map { arguments ->
+                    arguments.filter { it.startsWith("-D") }
+                        .map { it.removePrefix("-D") }
+                }
+
         val generateSwigWrapperTask = createGenerateJavaSwigWrapperTask(
             project,
             javaWrapper,
             variant.name,
+            symbols,
             swigWrapperTask,
             cmakeConfigTask
         )
@@ -86,7 +95,7 @@ public class SwigPlugin : Plugin<Project> {
             .get()
             .absolutePath
 
-        variant.externalNativeBuild?.arguments?.add("-C${cmakePreloadFilePath}")
+        externalNativeArguments?.add("-C${cmakePreloadFilePath}")
 
         project.afterEvaluate {
             tasks.withType(ExternalNativeBuildJsonTask::class).configureEach {
@@ -153,12 +162,18 @@ public class SwigPlugin : Plugin<Project> {
         project: Project,
         javaWrapper: JavaWrapper,
         variantName: String,
+        symbols: Provider<List<String>>?,
         swigWrapperTask: TaskProvider<Task>,
         cmakeConfigTask: TaskProvider<GenerateCmakeConfigTask>
     ): TaskProvider<GenerateSwigWrapperTask> {
         val packageName = javaWrapper.packageName
         val interfaceFile = javaWrapper.interfaceFile
-        val sourceFolders = javaWrapper.sourceFolders.files
+        val sourceFolders = javaWrapper.sourceFolders?.files
+        val extraArguments = javaWrapper.extraArguments.toList()
+
+        requireNotNull(packageName)
+        requireNotNull(interfaceFile)
+        requireNotNull(sourceFolders)
 
         val swigDir = project.swigDir
         val javaOutputDir = swigDir.map { it.dir("java/${variantName}") }
@@ -173,6 +188,13 @@ public class SwigPlugin : Plugin<Project> {
             this.interfaceFile.set(interfaceFile)
             this.source(interfaceFile)
             this.outputDir.set(javaOutputDir)
+            if (symbols != null) {
+                this.symbols.set(symbols)
+            } else {
+                this.symbols.set(emptyList())
+            }
+
+            this.extraArguments.set(extraArguments)
 
             this.sourceDirs.set(sourceFolders)
             this.wrapFile.set(wrapFile)
@@ -196,6 +218,7 @@ public class SwigPlugin : Plugin<Project> {
 
     private fun getWrapFile(javaWrapper: JavaWrapper, project: Project): Provider<RegularFile> {
         val interfaceFile = javaWrapper.interfaceFile
+        requireNotNull(interfaceFile)
         val cppOutputDir = project.swigDir.map { it.dir("cpp") }
         val interfaceWrapFileName = "${interfaceFile.nameWithoutExtension}_wrap.cpp"
         return cppOutputDir.map { it.file(interfaceWrapFileName) }

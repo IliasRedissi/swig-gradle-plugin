@@ -3,10 +3,16 @@ package com.redissi.swig.plugin.extension
 import org.gradle.api.file.FileCollection
 import java.io.File
 
-public abstract class JavaWrapper(public val name: String) {
-    public abstract var packageName: String
+public open class JavaWrapper(public val name: String) {
+    public var packageName: String? = null
 
-    public abstract var interfaceFile: File
+    public var interfaceFile: File? = null
 
-    public abstract var sourceFolders: FileCollection
+    public var sourceFolders: FileCollection? = null
+
+    public val extraArguments: MutableList<String> = mutableListOf()
+
+    public fun extraArguments(vararg arguments: String) {
+        extraArguments.addAll(arguments)
+    }
 }
