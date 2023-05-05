@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "com.redissi.swig"
-version = "0.5.0-SNAPSHOT"
+version = "0.5.0"
 
 dependencies {
     compileOnly(libs.android.gradle)
