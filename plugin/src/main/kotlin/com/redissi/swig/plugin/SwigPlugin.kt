@@ -23,9 +23,9 @@ import org.gradle.api.tasks.TaskProvider
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.register
-import org.gradle.kotlin.dsl.support.uppercaseFirstChar
 import org.gradle.kotlin.dsl.withType
 import java.io.File
+import java.util.Locale
 
 public class SwigPlugin : Plugin<Project> {
     internal companion object {
@@ -222,5 +222,9 @@ public class SwigPlugin : Plugin<Project> {
         val cppOutputDir = project.swigDir.map { it.dir("cpp") }
         val interfaceWrapFileName = "${interfaceFile.nameWithoutExtension}_wrap.cpp"
         return cppOutputDir.map { it.file(interfaceWrapFileName) }
+    }
+
+    private fun String.uppercaseFirstChar() = this.replaceFirstChar {
+        if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
     }
 }
