@@ -7,11 +7,13 @@ public final class com/redissi/swig/plugin/SwigPlugin : org/gradle/api/Plugin {
 public class com/redissi/swig/plugin/extension/JavaWrapper {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun extraArguments ([Ljava/lang/String;)V
+	public final fun getCppProcessing ()Z
 	public final fun getExtraArguments ()Ljava/util/List;
 	public final fun getInterfaceFile ()Ljava/io/File;
 	public final fun getName ()Ljava/lang/String;
 	public final fun getPackageName ()Ljava/lang/String;
 	public final fun getSourceFolders ()Lorg/gradle/api/file/FileCollection;
+	public final fun setCppProcessing (Z)V
 	public final fun setInterfaceFile (Ljava/io/File;)V
 	public final fun setPackageName (Ljava/lang/String;)V
 	public final fun setSourceFolders (Lorg/gradle/api/file/FileCollection;)V
@@ -25,6 +27,7 @@ public abstract class com/redissi/swig/plugin/extension/SwigExtension {
 public abstract class com/redissi/swig/plugin/task/GenerateSwigWrapperTask : org/gradle/api/tasks/SourceTask {
 	public fun <init> ()V
 	public fun generate ()V
+	public abstract fun getCppProcessing ()Lorg/gradle/api/provider/Property;
 	public abstract fun getExtraArguments ()Lorg/gradle/api/provider/ListProperty;
 	public abstract fun getInterfaceFile ()Lorg/gradle/api/file/RegularFileProperty;
 	public abstract fun getOutputDir ()Lorg/gradle/api/file/DirectoryProperty;

@@ -15,4 +15,6 @@ public open class JavaWrapper(public val name: String) {
     public fun extraArguments(vararg arguments: String) {
         extraArguments.addAll(arguments)
     }
+
+    public var cppProcessing: Boolean = true
 }

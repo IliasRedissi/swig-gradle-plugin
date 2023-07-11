@@ -48,6 +48,9 @@ public abstract class GenerateSwigWrapperTask : SourceTask() {
     @get:Input
     public abstract val extraArguments: ListProperty<String>
 
+    @get:Input
+    public abstract val cppProcessing: Property<Boolean>
+
     @get:OutputDirectory
     public abstract val outputDir: DirectoryProperty
 
@@ -83,8 +86,11 @@ public abstract class GenerateSwigWrapperTask : SourceTask() {
         outDir.mkdirs()
         wrapFile.parentFile.mkdirs()
 
+        if (cppProcessing.get()) {
+            customArgs += CPP_ARGUMENT
+        }
+
         customArgs += listOf(
-            CPP_ARGUMENT,
             OUTPUT_DIR_ARGUMENT, outDir.absolutePath,
             CPP_OUT_FILE_ARGUMENT, wrapFile.absolutePath
         )

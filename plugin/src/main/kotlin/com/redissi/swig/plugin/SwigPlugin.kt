@@ -201,6 +201,8 @@ public class SwigPlugin : Plugin<Project> {
 
             this.rootPath.set(project.rootDir.path)
 
+            this.cppProcessing.set(javaWrapper.cppProcessing)
+
             this.group = GROUP
         }
 
@@ -219,9 +221,15 @@ public class SwigPlugin : Plugin<Project> {
     private fun getWrapFile(javaWrapper: JavaWrapper, project: Project): Provider<RegularFile> {
         val interfaceFile = javaWrapper.interfaceFile
         requireNotNull(interfaceFile)
-        val cppOutputDir = project.swigDir.map { it.dir("cpp") }
-        val interfaceWrapFileName = "${interfaceFile.nameWithoutExtension}_wrap.cpp"
-        return cppOutputDir.map { it.file(interfaceWrapFileName) }
+        return if (javaWrapper.cppProcessing) {
+            val cppOutputDir = project.swigDir.map { it.dir("cpp") }
+            val interfaceWrapFileName = "${interfaceFile.nameWithoutExtension}_wrap.cpp"
+            cppOutputDir.map { it.file(interfaceWrapFileName) }
+        } else {
+            val cOutputDir = project.swigDir.map { it.dir("c") }
+            val interfaceWrapFileName = "${interfaceFile.nameWithoutExtension}_wrap.c"
+            cOutputDir.map { it.file(interfaceWrapFileName) }
+        }
     }
 
     private fun String.uppercaseFirstChar() = this.replaceFirstChar {
