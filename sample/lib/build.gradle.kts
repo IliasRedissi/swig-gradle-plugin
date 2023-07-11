@@ -22,8 +22,9 @@ android {
             create("SampleWrapper") {
                 packageName = "com.redissi.sample"
                 interfaceFile = file("src/main/swig/Sample.i")
-                sourceFolders = files("src/main/cpp")
-                extraArguments("-fvirtual", "-fcompact", "-D")
+                sourceFolders = files("src/main/cpp/include")
+                extraArguments("-fvirtual")
+                cppProcessing = false
             }
         }
     }
@@ -44,6 +45,7 @@ android {
     prefab {
         create("sample") {
             headers = "src/main/cpp/include"
+            headerOnly = true
         }
     }
 }

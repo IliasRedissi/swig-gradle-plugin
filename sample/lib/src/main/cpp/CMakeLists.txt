@@ -2,22 +2,18 @@ cmake_minimum_required(VERSION 3.18.1)
 
 set(CMAKE_VERBOSE_MAKEFILE 1)
 
-project("sample")
+project("sample" LANGUAGES C)
 
-add_library(sample
-            SHARED
-            Company.cpp)
+add_library(sample SHARED include/Company.h)
 
-include_directories(.)
+set_target_properties(sample PROPERTIES LINKER_LANGUAGE C)
+
+include_directories(include)
 
 if(COMPANY_YEAR)
-    target_compile_definitions(sample PUBLIC COMPANY_YEAR)
+    target_compile_definitions(sample INTERFACE COMPANY_YEAR)
 endif()
-
-find_library(log-lib log)
-
-target_link_libraries(sample ${log-lib})
 
 find_package(SampleWrapper REQUIRED CONFIG)
 
-target_link_libraries(SampleWrapper sample)
+target_link_libraries(SampleWrapper PUBLIC sample)
