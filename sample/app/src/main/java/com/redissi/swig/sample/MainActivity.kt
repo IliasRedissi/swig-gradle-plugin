@@ -3,7 +3,7 @@ package com.redissi.swig.sample
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.redissi.sample.Company
-import com.redissi.sample.Employee
+import com.redissi.sample.groovy.Employee
 import com.redissi.swig.sample.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

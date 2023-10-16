@@ -39,12 +39,11 @@ android {
     }
 
     swig {
-        javaWrapper {
-            SampleGroovyWrapper {
-                packageName = "com.redissi.sample"
-                interfaceFile = file("src/main/swig/SampleGroovy.i")
-                sourceFolders = files("src/main/cpp", projects.sample.lib.dependencyProject.file("src/main/cpp/include"))
-            }
+        SampleGroovyWrapper {
+            packageName = "com.redissi.sample.groovy"
+            interfaceFile = file("src/main/swig/SampleGroovy.i")
+            sourceFolders = files("src/main/cpp")
+            dependsOn(projects.sample.lib)
         }
     }
 }

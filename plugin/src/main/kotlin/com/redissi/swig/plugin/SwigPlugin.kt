@@ -9,10 +9,10 @@ import com.android.build.api.variant.VariantExtension
 import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.android.build.gradle.tasks.ExternalNativeBuildJsonTask
 import com.redissi.swig.plugin.extension.JavaWrapper
-import com.redissi.swig.plugin.extension.SwigExtension
 import com.redissi.swig.plugin.task.GenerateCmakeConfigTask
 import com.redissi.swig.plugin.task.GenerateCmakePreloadScriptTask
 import com.redissi.swig.plugin.task.GenerateSwigWrapperTask
+import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -20,8 +20,9 @@ import org.gradle.api.file.Directory
 import org.gradle.api.file.RegularFile
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.TaskProvider
-import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.named
+import org.gradle.kotlin.dsl.newInstance
 import org.gradle.kotlin.dsl.register
 import org.gradle.kotlin.dsl.withType
 import java.io.File
@@ -35,8 +36,16 @@ public class SwigPlugin : Plugin<Project> {
         internal const val SOURCE_NAME = "swig"
     }
 
+    private lateinit var container: NamedDomainObjectContainer<JavaWrapper>
+
     override fun apply(project: Project) {
-        val extension = project.extensions.create<SwigExtension>(EXTENSION_NAME)
+        val objects = project.objects
+
+        container = objects.domainObjectContainer(JavaWrapper::class.java) { name ->
+            objects.newInstance(JavaWrapper::class, name)
+        }
+
+        project.extensions.add(EXTENSION_NAME, container)
 
         val swigWrapperTask = project.tasks.register(SWIG_WRAPPER_TASK_NAME) {
             group = GROUP
@@ -45,17 +54,19 @@ public class SwigPlugin : Plugin<Project> {
         val androidComponents = project.extensions.getByType(AndroidComponentsExtension::class.java)
 
         val dslExtension = DslExtension.Builder(EXTENSION_NAME)
-            .extendProjectWith(SwigExtension::class.java)
+            .extendProjectWith(container::class.java)
             .build()
 
         androidComponents.registerExtension(dslExtension) {
-            object : VariantExtension {}
+            object : VariantExtension {
+
+            }
         }
 
         androidComponents.registerSourceType(SOURCE_NAME)
 
         androidComponents.onVariants { variant: Variant ->
-            extension.javaWrapper.forEach { javaWrapper ->
+            container.forEach { javaWrapper ->
                 configureTasks(project, javaWrapper, variant, swigWrapperTask)
             }
         }
@@ -67,21 +78,33 @@ public class SwigPlugin : Plugin<Project> {
         variant: Variant,
         swigWrapperTask: TaskProvider<Task>
     ) {
+        val dependenciesWrapper = javaWrapper.dependencies.flatMap { dependencyProject ->
+            project.evaluationDependsOn(dependencyProject.path)
+            dependencyProject.plugins.getPlugin(SwigPlugin::class.java)
+                .container
+                .asMap
+                .values
+        }
 
         val cmakeConfigTask = createOrFindCmakeConfigTask(project, javaWrapper)
         val cmakePreloadTaskName = createOrFindCmakePreloadScriptTask(project, cmakeConfigTask)
 
         val externalNativeArguments = variant.externalNativeBuild?.arguments
 
-        val symbols = externalNativeArguments
-                ?.map { arguments ->
-                    arguments.filter { it.startsWith("-D") }
-                        .map { it.removePrefix("-D") }
-                }
+        val symbols = project.objects.listProperty<String>()
+
+        externalNativeArguments
+            ?.map { arguments ->
+                arguments.filter { it.startsWith("-D") }.map { it.removePrefix("-D") }
+            }
+            ?.let { symbols.addAll(it) }
+
+        symbols.addAll(dependenciesWrapper.map { "SWIG_${it.name.uppercase()}_INTERFACE=${it.interfaceFile.asFile.get().absolutePath}" })
 
         val generateSwigWrapperTask = createGenerateJavaSwigWrapperTask(
             project,
             javaWrapper,
+            dependenciesWrapper,
             variant.name,
             symbols,
             swigWrapperTask,
@@ -161,6 +184,7 @@ public class SwigPlugin : Plugin<Project> {
     private fun createGenerateJavaSwigWrapperTask(
         project: Project,
         javaWrapper: JavaWrapper,
+        dependenciesWrapper: List<JavaWrapper>,
         variantName: String,
         symbols: Provider<List<String>>?,
         swigWrapperTask: TaskProvider<Task>,
@@ -168,12 +192,13 @@ public class SwigPlugin : Plugin<Project> {
     ): TaskProvider<GenerateSwigWrapperTask> {
         val packageName = javaWrapper.packageName
         val interfaceFile = javaWrapper.interfaceFile
-        val sourceFolders = javaWrapper.sourceFolders?.files
+        val sourceFolders = mutableSetOf<File>()
+        sourceFolders.addAll(javaWrapper.sourceFolders.get())
+        dependenciesWrapper.map { it.sourceFolders.get() }.flatten().let { sourceFolders.addAll(it) }
         val extraArguments = javaWrapper.extraArguments.toList()
 
         requireNotNull(packageName)
         requireNotNull(interfaceFile)
-        requireNotNull(sourceFolders)
 
         val swigDir = project.swigDir
         val javaOutputDir = swigDir.map { it.dir("java/${variantName}") }
@@ -193,6 +218,8 @@ public class SwigPlugin : Plugin<Project> {
             } else {
                 this.symbols.set(emptyList())
             }
+
+            println(this.symbols.get())
 
             this.extraArguments.set(extraArguments)
 
@@ -219,9 +246,8 @@ public class SwigPlugin : Plugin<Project> {
         get() = this.swigDir.map { it.dir("cmake") }
 
     private fun getWrapFile(javaWrapper: JavaWrapper, project: Project): Provider<RegularFile> {
-        val interfaceFile = javaWrapper.interfaceFile
-        requireNotNull(interfaceFile)
-        return if (javaWrapper.cppProcessing) {
+        val interfaceFile = javaWrapper.interfaceFile.asFile.get()
+        return if (javaWrapper.cppProcessing.get()) {
             val cppOutputDir = project.swigDir.map { it.dir("cpp") }
             val interfaceWrapFileName = "${interfaceFile.nameWithoutExtension}_wrap.cpp"
             cppOutputDir.map { it.file(interfaceWrapFileName) }

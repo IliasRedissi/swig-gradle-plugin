@@ -2,7 +2,15 @@
 
 %include "std_string.i"
 
-%import "../../../../lib/src/main/swig/Sample.i"
+%import SWIG_SAMPLEWRAPPER_INTERFACE
+
+%pragma(java) jniclassimports=%{
+import com.redissi.sample.*;
+%}
+
+%typemap(javaimports) SWIGTYPE %{
+import com.redissi.sample.*;
+%}
 
 %{
 #include "include/Person.h"
