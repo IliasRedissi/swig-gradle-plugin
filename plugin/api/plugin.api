@@ -16,6 +16,10 @@ public abstract class com/redissi/swig/plugin/extension/JavaWrapper {
 	public abstract fun getSourceFolders ()Lorg/gradle/api/provider/ListProperty;
 }
 
+public abstract interface class com/redissi/swig/plugin/extension/SwigConfig {
+	public abstract fun getSwigFile ()Lorg/gradle/api/file/RegularFileProperty;
+}
+
 public abstract class com/redissi/swig/plugin/task/GenerateSwigWrapperTask : org/gradle/api/tasks/SourceTask {
 	public fun <init> ()V
 	public fun generate ()V

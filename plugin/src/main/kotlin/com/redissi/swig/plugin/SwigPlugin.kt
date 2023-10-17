@@ -9,6 +9,7 @@ import com.android.build.api.variant.VariantExtension
 import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.android.build.gradle.tasks.ExternalNativeBuildJsonTask
 import com.redissi.swig.plugin.extension.JavaWrapper
+import com.redissi.swig.plugin.extension.SwigConfig
 import com.redissi.swig.plugin.task.GenerateCmakeConfigTask
 import com.redissi.swig.plugin.task.GenerateCmakePreloadScriptTask
 import com.redissi.swig.plugin.task.GenerateSwigWrapperTask
@@ -32,6 +33,7 @@ public class SwigPlugin : Plugin<Project> {
     internal companion object {
         internal const val GROUP = "swig"
         internal const val EXTENSION_NAME = "swig"
+        internal const val EXTENSION_CONFIG_NAME = "swigConfig"
         internal const val SWIG_WRAPPER_TASK_NAME = "generateSwigWrapper"
         internal const val SOURCE_NAME = "swig"
     }
@@ -46,28 +48,31 @@ public class SwigPlugin : Plugin<Project> {
         }
 
         project.extensions.add(EXTENSION_NAME, container)
+        project.extensions.create(EXTENSION_CONFIG_NAME, SwigConfig::class.java)
 
-        val swigWrapperTask = project.tasks.register(SWIG_WRAPPER_TASK_NAME) {
-            group = GROUP
-        }
+        val androidComponents = project.extensions.findByType(AndroidComponentsExtension::class.java)
 
-        val androidComponents = project.extensions.getByType(AndroidComponentsExtension::class.java)
-
-        val dslExtension = DslExtension.Builder(EXTENSION_NAME)
-            .extendProjectWith(container::class.java)
-            .build()
-
-        androidComponents.registerExtension(dslExtension) {
-            object : VariantExtension {
-
+        if (androidComponents != null) {
+            val swigWrapperTask = project.tasks.register(SWIG_WRAPPER_TASK_NAME) {
+                group = GROUP
             }
-        }
 
-        androidComponents.registerSourceType(SOURCE_NAME)
+            val dslExtension = DslExtension.Builder(EXTENSION_NAME)
+                .extendProjectWith(container::class.java)
+                .build()
 
-        androidComponents.onVariants { variant: Variant ->
-            container.forEach { javaWrapper ->
-                configureTasks(project, javaWrapper, variant, swigWrapperTask)
+            androidComponents.registerExtension(dslExtension) {
+                object : VariantExtension {
+
+                }
+            }
+
+            androidComponents.registerSourceType(SOURCE_NAME)
+
+            androidComponents.onVariants { variant: Variant ->
+                container.forEach { javaWrapper ->
+                    configureTasks(project, javaWrapper, variant, swigWrapperTask)
+                }
             }
         }
     }
@@ -218,8 +223,6 @@ public class SwigPlugin : Plugin<Project> {
             } else {
                 this.symbols.set(emptyList())
             }
-
-            println(this.symbols.get())
 
             this.extraArguments.set(extraArguments)
 
