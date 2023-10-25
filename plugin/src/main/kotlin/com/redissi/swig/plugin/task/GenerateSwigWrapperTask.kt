@@ -28,6 +28,8 @@ public abstract class GenerateSwigWrapperTask : SourceTask() {
         private const val CPP_ARGUMENT = "-c++"
         private const val OUTPUT_DIR_ARGUMENT = "-outdir"
         private const val CPP_OUT_FILE_ARGUMENT = "-o"
+
+        private val WARNING_MESSAGE_REGEX = "Warning \\d+:".toRegex()
     }
 
     @get:Inject
@@ -117,12 +119,25 @@ public abstract class GenerateSwigWrapperTask : SourceTask() {
 
         try {
             val process = ProcessBuilder(command).start()
-            val error = process.errorStream.readAllBytes().joinToString("") {
+            val errorMessage = process.errorStream.readAllBytes().joinToString("") {
                 it.toInt().toChar().toString()
             }
 
-            if (error.isNotEmpty()) {
-                throw TaskExecutionException(this, RuntimeException(error))
+            val errors = mutableListOf<String>()
+
+            errorMessage.split("\n")
+                .filter { it.isNotEmpty() }
+                .forEach {
+                    if (it.contains(WARNING_MESSAGE_REGEX)) {
+                        logger.warn("w: $it")
+                    } else {
+                        logger.error("e: $it")
+                        errors += it
+                    }
+            }
+
+            if (errors.isNotEmpty()) {
+                throw TaskExecutionException(this, RuntimeException(errors.joinToString("\n")))
             }
         } catch (e: IOException) {
             throw TaskExecutionException(this, e)
