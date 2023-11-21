@@ -140,6 +140,7 @@ public class SwigPlugin : Plugin<Project> {
         val cmakeOutputDir = project.cmakeOutputDir
         val cmakeConfigOutputDir = cmakeOutputDir.map { it.dir("config") }
         val wrapFile = getWrapFile(javaWrapper, project)
+        val targetsToLink = javaWrapper.targets
 
         val cmakeConfigTaskName = "generateCmakeConfig${nameCapitalized}"
         val cmakeConfigTask = when {
@@ -149,6 +150,7 @@ public class SwigPlugin : Plugin<Project> {
                     this.outputDir.set(cmakeConfigOutputDir)
                     this.libName.set(name)
                     this.sourceDirs.set(sourceFolders)
+                    this.targetsToLink.set(targetsToLink)
 
                     this.group = GROUP
                 }

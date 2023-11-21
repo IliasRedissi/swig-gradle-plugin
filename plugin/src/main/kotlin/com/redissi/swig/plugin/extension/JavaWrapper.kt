@@ -34,6 +34,12 @@ public abstract class JavaWrapper @Inject constructor(public val name: String) {
         dependsOn(*projectDependency.map { it.dependencyProject }.toTypedArray())
     }
 
+    internal val targets = mutableListOf<String>()
+
+    public fun targetsToLink(vararg targets: String) {
+        this.targets.addAll(targets)
+    }
+
     init {
         cppProcessing.convention(true)
     }

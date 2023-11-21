@@ -14,6 +14,7 @@ public abstract class com/redissi/swig/plugin/extension/JavaWrapper {
 	public final fun getName ()Ljava/lang/String;
 	public abstract fun getPackageName ()Lorg/gradle/api/provider/Property;
 	public abstract fun getSourceFolders ()Lorg/gradle/api/provider/ListProperty;
+	public final fun targetsToLink ([Ljava/lang/String;)V
 }
 
 public abstract interface class com/redissi/swig/plugin/extension/SwigConfig {

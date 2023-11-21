@@ -26,12 +26,16 @@ internal abstract class GenerateCmakeConfigTask : DefaultTask() {
     @get:InputFiles
     abstract val sourceDirs: ListProperty<File>
 
+    @get:Input
+    abstract val targetsToLink: ListProperty<String>
+
     @TaskAction
     fun generate() {
         val libName = libName.get()
         val cppFile = cppFile.get().asFile
         val outputDir = outputDir.get().asFile
         val sourceDirs = sourceDirs.get()
+        val targetsToLink = targetsToLink.get()
 
         val cppPath = cppFile.absolutePath.replace('\\', '/')
 
@@ -41,6 +45,10 @@ internal abstract class GenerateCmakeConfigTask : DefaultTask() {
             |    
             |    target_include_directories(${libName} PUBLIC 
             |       ${sourceDirs.joinToString(" ")}
+            |    )
+            |    
+            |    target_link_libraries(${libName} PUBLIC 
+            |       ${targetsToLink.joinToString(" ")}
             |    )
             |endif()
         """.trimMargin()
