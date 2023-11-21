@@ -3,9 +3,7 @@
 package com.redissi.swig.plugin
 
 import com.android.build.api.variant.AndroidComponentsExtension
-import com.android.build.api.variant.DslExtension
 import com.android.build.api.variant.Variant
-import com.android.build.api.variant.VariantExtension
 import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.android.build.gradle.tasks.ExternalNativeBuildJsonTask
 import com.redissi.swig.plugin.extension.JavaWrapper
@@ -55,16 +53,6 @@ public class SwigPlugin : Plugin<Project> {
         if (androidComponents != null) {
             val swigWrapperTask = project.tasks.register(SWIG_WRAPPER_TASK_NAME) {
                 group = GROUP
-            }
-
-            val dslExtension = DslExtension.Builder(EXTENSION_NAME)
-                .extendProjectWith(container::class.java)
-                .build()
-
-            androidComponents.registerExtension(dslExtension) {
-                object : VariantExtension {
-
-                }
             }
 
             androidComponents.registerSourceType(SOURCE_NAME)
