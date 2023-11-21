@@ -18,5 +18,3 @@ find_package(lib REQUIRED CONFIG)
 target_link_libraries(sampleGroovy ${log-lib} lib::sample)
 
 find_package(SampleGroovyWrapper REQUIRED CONFIG)
-
-target_link_libraries(SampleGroovyWrapper sampleGroovy)

@@ -6,6 +6,7 @@ plugins {
 android {
     namespace = "com.redissi.swig.sample.lib"
     compileSdk = 33
+    ndkVersion = "21.4.7075529"
 
     defaultConfig {
         minSdk = 21
@@ -16,18 +17,6 @@ android {
             }
         }
     }
-
-    swig {
-        create("SampleWrapper") {
-            packageName = "com.redissi.sample"
-            interfaceFile = file("src/main/swig/Sample.i")
-            sourceFolders = files("src/main/cpp/include")
-            extraArguments("-fvirtual")
-            cppProcessing = false
-        }
-    }
-
-    ndkVersion = "21.4.7075529"
 
     externalNativeBuild {
         cmake {
@@ -45,5 +34,15 @@ android {
             headers = "src/main/cpp/include"
             headerOnly = true
         }
+    }
+}
+
+swig {
+    create("SampleWrapper") {
+        packageName = "com.redissi.sample"
+        interfaceFile = file("src/main/swig/Sample.i")
+        sourceFolders = files("src/main/cpp/include")
+        extraArguments("-fvirtual")
+        cppProcessing = false
     }
 }

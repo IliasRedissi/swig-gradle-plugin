@@ -37,14 +37,15 @@ android {
             headers 'src/main/cpp/include'
         }
     }
+}
 
-    swig {
-        SampleGroovyWrapper {
-            packageName = "com.redissi.sample.groovy"
-            interfaceFile = file("src/main/swig/SampleGroovy.i")
-            sourceFolders = files("src/main/cpp")
-            dependsOn(projects.sample.lib)
-        }
+swig {
+    SampleGroovyWrapper {
+        packageName = "com.redissi.sample.groovy"
+        interfaceFile = file("src/main/swig/SampleGroovy.i")
+        sourceFolders = files("src/main/cpp")
+        dependsOn(projects.sample.lib)
+        targetsToLink "sampleGroovy"
     }
 }
 
