@@ -79,7 +79,15 @@ public class SwigPlugin : Plugin<Project> {
                 .values
         }
 
-        val cmakeConfigTask = createOrFindCmakeConfigTask(project, javaWrapper)
+        val sourceFolders = mutableSetOf<File>()
+        sourceFolders.addAll(javaWrapper.sourceFolders.get())
+        dependenciesWrapper.map { it.sourceFolders.get() }.flatten().let { sourceFolders.addAll(it) }
+
+        val cmakeConfigTask = createOrFindCmakeConfigTask(
+            project,
+            javaWrapper,
+            sourceFolders
+        )
         val cmakePreloadTaskName = createOrFindCmakePreloadScriptTask(project, cmakeConfigTask)
 
         val externalNativeArguments = variant.externalNativeBuild?.arguments
@@ -97,9 +105,9 @@ public class SwigPlugin : Plugin<Project> {
         val generateSwigWrapperTask = createGenerateJavaSwigWrapperTask(
             project,
             javaWrapper,
-            dependenciesWrapper,
             variant.name,
             symbols,
+            sourceFolders,
             swigWrapperTask,
             cmakeConfigTask
         )
@@ -123,7 +131,8 @@ public class SwigPlugin : Plugin<Project> {
 
     private fun createOrFindCmakeConfigTask(
         project: Project,
-        javaWrapper: JavaWrapper
+        javaWrapper: JavaWrapper,
+        sourceFolders: Set<File>
     ): TaskProvider<GenerateCmakeConfigTask> {
         val name = javaWrapper.name
         val nameCapitalized = name.uppercaseFirstChar()
@@ -139,6 +148,7 @@ public class SwigPlugin : Plugin<Project> {
                     this.cppFile.set(wrapFile)
                     this.outputDir.set(cmakeConfigOutputDir)
                     this.libName.set(name)
+                    this.sourceDirs.set(sourceFolders)
 
                     this.group = GROUP
                 }
@@ -177,21 +187,15 @@ public class SwigPlugin : Plugin<Project> {
     private fun createGenerateJavaSwigWrapperTask(
         project: Project,
         javaWrapper: JavaWrapper,
-        dependenciesWrapper: List<JavaWrapper>,
         variantName: String,
         symbols: Provider<List<String>>?,
+        sourceFolders: Set<File>,
         swigWrapperTask: TaskProvider<Task>,
         cmakeConfigTask: TaskProvider<GenerateCmakeConfigTask>
     ): TaskProvider<GenerateSwigWrapperTask> {
         val packageName = javaWrapper.packageName
         val interfaceFile = javaWrapper.interfaceFile
-        val sourceFolders = mutableSetOf<File>()
-        sourceFolders.addAll(javaWrapper.sourceFolders.get())
-        dependenciesWrapper.map { it.sourceFolders.get() }.flatten().let { sourceFolders.addAll(it) }
         val extraArguments = javaWrapper.extraArguments.toList()
-
-        requireNotNull(packageName)
-        requireNotNull(interfaceFile)
 
         val swigDir = project.swigDir
         val javaOutputDir = swigDir.map { it.dir("java/${variantName}") }
