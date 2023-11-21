@@ -73,10 +73,11 @@ public class SwigPlugin : Plugin<Project> {
     ) {
         val dependenciesWrapper = javaWrapper.dependencies.flatMap { dependencyProject ->
             project.evaluationDependsOn(dependencyProject.path)
-            dependencyProject.plugins.getPlugin(SwigPlugin::class.java)
-                .container
-                .asMap
-                .values
+            dependencyProject.plugins.findPlugin(SwigPlugin::class.java)
+                ?.container
+                ?.asMap
+                ?.values
+                ?: error("Project ${dependencyProject.name} doesn't declare a Swig configuration")
         }
 
         val sourceFolders = mutableSetOf<File>()
