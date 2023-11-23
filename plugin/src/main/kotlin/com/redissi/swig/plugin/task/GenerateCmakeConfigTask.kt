@@ -34,7 +34,7 @@ internal abstract class GenerateCmakeConfigTask : DefaultTask() {
         val libName = libName.get()
         val cppFile = cppFile.get().asFile
         val outputDir = outputDir.get().asFile
-        val sourceDirs = sourceDirs.get()
+        val sourceDirs = sourceDirs.get().map { it.absolutePath.replace('\\', '/') }
         val targetsToLink = targetsToLink.get()
 
         val cppPath = cppFile.absolutePath.replace('\\', '/')
